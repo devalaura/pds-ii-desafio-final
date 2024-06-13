@@ -1,0 +1,32 @@
+﻿{
+  "configurations": [
+    {
+      "name": "x64-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "C:/Repos/vcpkg/scripts/buildsystems/vcpkg.cmake",
+          "type": "STRING"
+        },
+        {
+          "name": "bsoncxx_DIR",
+          "value": "C:/Repos/vcpkg/installed/x64-windows/include/bsoncxx/v_noabi/bsoncxx",
+          "type": "PATH"
+        },
+        {
+          "name": "mongocxx_DIR",
+          "value": "C:/Repos/vcpkg/installed/x64-windows/include/mongocxx/v_noabi/mongocxx",
+          "type": "PATH"
+        }
+      ]
+    }
+  ]
+}
