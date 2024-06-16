@@ -3,6 +3,7 @@
 
 #include <string>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/types.hpp>
 
 class Book {
 	public:
@@ -20,6 +21,8 @@ class Book {
 			book->autor = doc["autor"].get_utf8().value;
 			book->isbn = doc["isbn"].get_utf8().value;
 			book->ano_publicacao = doc["ano_publicacao"].get_int32();
+
+			return book;
 		}
 
 	private:
