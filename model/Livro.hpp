@@ -14,6 +14,7 @@ class Livro{
         string autor;
         int ano_de_publicacao;
         int isbn; // número de identificação único para cada livro cadastrado
+        int disponivel; // 0 para disponível, 1 para emprestado
 
     public:
         Livro(); // construtor
@@ -22,11 +23,14 @@ class Livro{
         string getAutor() const;
         int getAnoDePublicacao() const;
         int getIsbn() const;
+        int getDisponivel() const;
 
         void setTitulo(string titulo);
         void setAutor(string autor);
         void setAnoDePublicacao(int ano_de_publicacao);
         void setIsbn(int isbn);
+        void setDisponivel(int disponivel);
+
 
         static Livro from_bson(bsoncxx::document::view doc) {
             Livro livro;
@@ -34,6 +38,7 @@ class Livro{
             livro.autor = doc["autor"].get_utf8().value;
             livro.isbn = doc["isbn"].get_int32();
             livro.ano_de_publicacao = doc["ano_publicacao"].get_int32();
+            livro.disponivel = doc["disponivel"].get_int32();
 
             return livro;
         }

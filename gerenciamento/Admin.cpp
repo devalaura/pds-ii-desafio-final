@@ -97,8 +97,6 @@ void Admin::menu() {
     int opcao;
     string input;
 
-    Repository* repo = new Repository();
-
     while (true) {
           cout    << "1. Adicionar livro\n"
                   << "2. Deletar livro\n"

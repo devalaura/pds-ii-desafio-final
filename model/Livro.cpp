@@ -10,6 +10,7 @@ Livro::Livro() {
     autor = "";
     ano_de_publicacao = 0;
     isbn = 0;
+    disponivel = 0;
 }
 
 string Livro::getTitulo() const {
@@ -28,6 +29,10 @@ int Livro::getIsbn() const {
     return isbn;
 }
 
+int Livro::getDisponivel() const {
+    return disponivel;
+}
+
 void Livro::setTitulo(string titulo){
     this->titulo = titulo;
 }
@@ -42,5 +47,9 @@ void Livro::setAnoDePublicacao(int ano_de_publicacao){
 
 void Livro::setIsbn(int isbn){
     this->isbn = isbn;
+}
+
+void Livro::setDisponivel(int disponivel) {
+    this->disponivel = disponivel;
 }
 

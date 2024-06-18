@@ -4,10 +4,13 @@
 #include "Pessoa.hpp"
 
 class Cliente : public Pessoa {
-public:
-    Cliente(string nome, string cpf, string username, string senha);
+    public:
+        Cliente(string nome, string cpf, string username, string senha);
 
-    void menu() override; 
+        void listarLivros();
+        void pegarLivro(int isbn);
+        void devolverLivro(int isbn);
+        void menu();
 };
 
 #endif 
