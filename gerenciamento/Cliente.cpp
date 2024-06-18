@@ -4,8 +4,10 @@
 #include <limits>
 #include "./../database/interfaces/Repository.hpp"
 
+// implementação do construtor
 Cliente::Cliente(string nome, string cpf, string username, string senha)
-    : Pessoa(nome, cpf, username, senha, 0) {}
+    : Pessoa(nome, cpf, username, senha, 0) {} // inicializa os atributos herdados da classe Pessoa
+    // o tipo é definido como 0 para indicar um cliente
 
 void Cliente::listarLivros() {
     cout << "Listar Livros\n";
@@ -30,7 +32,7 @@ void Cliente::pegarLivro(int isbn) {
         }
     }
 
-    cout << "Livro com ISBN " << isbn << " n�o encontrado ou j� est� alugado.\n";
+    cout << "Livro com ISBN " << isbn << " não encontrado ou já está alugado.\n";
     
 }
 void Cliente::devolverLivro(int isbn) {
@@ -45,19 +47,22 @@ void Cliente::devolverLivro(int isbn) {
         }
     }
 
-    cout << "Livro com ISBN " << isbn << " n�o encontrado ou j� est� dispon�vel.\n";
+    cout << "Livro com ISBN " << isbn << " não encontrado ou já está disponível.\n";
 }
 
 
+// implementação do menu do cliente - operações de alugar e devolver livro
 void Cliente::menu() {
     int opcao;
     string input;
+    // o menu roda até que o cliente selecione a opção de deslogar 
     while (true) {
         cout << "1. Pegar Livro\n2. Devolver Livro\n3. Listar Livros\n4. Deslogar\nEscolha: ";
         while (true) {
-            getline(cin, input);
+            getline(cin, input); // o getline é utilizado para ler uma string
+            
             try {
-                opcao = stoi(input);
+                opcao = stoi(input); // o stoi converte a string para um numero inteiro
                 break;
             }
             catch (const invalid_argument& e) {

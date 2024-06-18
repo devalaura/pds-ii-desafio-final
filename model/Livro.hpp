@@ -19,12 +19,14 @@ class Livro{
     public:
         Livro(); // construtor
 
+        // funções para resgatar o valor salvo nas variaveis
         string getTitulo() const;
         string getAutor() const;
         int getAnoDePublicacao() const;
         int getIsbn() const;
         int getDisponivel() const;
 
+        // funções para atribuir um valor as variaveis
         void setTitulo(string titulo);
         void setAutor(string autor);
         void setAnoDePublicacao(int ano_de_publicacao);

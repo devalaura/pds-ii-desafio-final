@@ -9,8 +9,9 @@
 
 using namespace std;
 
+// construtor 
 Admin::Admin(string nome, string cpf, string username, string senha)
-    : Pessoa(nome, cpf, username, senha, 1) 
+    : Pessoa(nome, cpf, username, senha, 1) // chama o construtor da classe Pessoa e define o tipo como 1 para indicar um administrador
 {}
 
 void Admin::set_admin(string username) {
@@ -19,6 +20,7 @@ void Admin::set_admin(string username) {
     bool encontrado = false;
     string conteudo;
 
+    // percorre todas as linhas do arquivo
     while (getline(arquivo, linha)) {
         stringstream ss(linha);
         string usuario, senha, nome, cpf, tipo;
@@ -28,20 +30,22 @@ void Admin::set_admin(string username) {
         getline(ss, cpf, ',');
         getline(ss, tipo, ',');
 
+        // verifica se o nome do usuario está salvo no arquivo
         if (usuario == username) {
             encontrado = true;
+            // modifica o tipo para setar o usuário como administrador
             linha = usuario + "," + senha + "," + nome + "," + cpf + ",1";
         }
         conteudo += linha + "\n";
     }
 
-    arquivo.close(); // Fechar o arquivo para reabrir em modo de escrita
-    arquivo.open("usuarios.txt", ios::out | ios::trunc); // Abrir em modo de escrita truncando o conteúdo anterior
+    arquivo.close(); // fechar o arquivo para reabrir em modo de escrita
+    arquivo.open("usuarios.txt", ios::out | ios::trunc); // abrir em modo de escrita truncando o conteúdo anterior - apaga todo conteúdo que tiver no arquivo
 
     if (arquivo.is_open()) {
-        arquivo << conteudo; // Escrever o conteúdo modificado de volta no arquivo
-        arquivo.close();
-    } else {
+        arquivo << conteudo; // escreve o conteúdo modificado de volta no arquivo
+        arquivo.close(); // fecha o arquivo
+    } else { 
         cout << "Erro ao abrir o arquivo para escrita.\n";
     }
 
@@ -59,6 +63,7 @@ void Admin::remove_admin(string username) {
     bool encontrado = false;
     string conteudo;
 
+    // percorre todas as linhas do arquivo
     while (getline(arquivo, linha)) {
         stringstream ss(linha);
         string usuario, senha, nome, cpf, tipo;
@@ -68,15 +73,17 @@ void Admin::remove_admin(string username) {
         getline(ss, cpf, ',');
         getline(ss, tipo, ',');
 
+        // verifica se o usuario está salvo no arquivo
         if (usuario == username) {
             encontrado = true;
+            // altera o tipo para 0 = cliente
             linha = usuario + "," + senha + "," + nome + "," + cpf + ",0";
         }
         conteudo += linha + "\n";
     }
 
-    arquivo.close(); // Fechar o arquivo para reabrir em modo de escrita
-    arquivo.open("usuarios.txt", ios::out | ios::trunc); // Abrir em modo de escrita truncando o conteúdo anterior
+    arquivo.close(); // fecha o arquivo para reabrir em modo de escrita
+    arquivo.open("usuarios.txt", ios::out | ios::trunc); // abre em modo de escrita truncando o conteúdo anterior
 
     if (arquivo.is_open()) {
         arquivo << conteudo; // Escrever o conteúdo modificado de volta no arquivo
@@ -97,6 +104,7 @@ void Admin::menu() {
     int opcao;
     string input;
 
+    // exibe o menu do administador até que o usuário decida deslogar da conta
     while (true) {
           cout    << "1. Adicionar livro\n"
                   << "2. Deletar livro\n"
@@ -109,17 +117,19 @@ void Admin::menu() {
         
         
         getline(cin, input);
+
         try {
-            opcao = stoi(input);
-        } catch (const   invalid_argument& e) {
-                cout << "Opcao invalida. Tente novamente.\n";
+            opcao = stoi(input); // tentativa de converter a string input para int usando a função stoi
+        } catch (const   invalid_argument& e) { // lança uma excessão quando o argumento é invalido
+                cout << "Opcao invalida. Tente novamente.\n"; // informa ao usuario que a opção foi invalidada
         }
         
 
         switch (opcao) {
             case 1: {
-                Livro livro;
-
+                Livro livro; // cria um objeto do tipo Livro
+                
+                // le e armazena as informações sobre o livro
                 cout << "Insira as informacoes para adicionar um novo livro:\n";
                 cout << "Titulo: ";
                 getline(cin, input);
@@ -145,6 +155,7 @@ void Admin::menu() {
             }
 
             case 2: {
+                // le o isbn do livro que o administrador deseja deletar
                 cout << "Insira o ISBN do livro que deseja remover: ";
                 getline(cin, input);
                 int isbn_pesquisa = stoi(input);
@@ -161,7 +172,8 @@ void Admin::menu() {
 
                 // Busca todos os livros do banco de dados
                 vector<Livro> livros = repo->get_all_books();
-                for (Livro livro : livros) {
+                for (Livro livro : livros) { // itera sobre todos os objetos do tipo Livro dentro do vetor livros
+                    // exibe as informações de cada livro
                     cout << "Titulo: " << livro.getTitulo() << "\n";
                     cout << "Autor: " << livro.getAutor() << "\n";
                     cout << "Ano de publicacao: " << livro.getAnoDePublicacao() << "\n";
@@ -174,9 +186,10 @@ void Admin::menu() {
                 cout << "Atualizar livro\n";
                 cout << "Insira o ISBN do livro que deseja atualizar: ";
                 getline(cin, input);
-                int isbn_pesquisa =   stoi(input);
-                Livro livro = repo->get_book_by_isbn(isbn_pesquisa);
+                int isbn_pesquisa = stoi(input);
+                Livro livro = repo->get_book_by_isbn(isbn_pesquisa); 
                 
+                // atualiza as informações do livro - não é possivel alterar o isbn tendo em vista que ele é único
                 cout << "Insira as novas informacoes do livro:\n";
                 cout << "Titulo: ";
                 getline(cin, input);

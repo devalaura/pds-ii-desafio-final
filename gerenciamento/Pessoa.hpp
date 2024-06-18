@@ -7,22 +7,23 @@
 using namespace std;
 
 class Pessoa {
-protected:
-    string nome;
-    string cpf;
-    string username;
-    string senha;
-    int tipo; // 0 para Cliente, 1 para Admin
-    Repository* repo;
+    protected:
+        string nome;
+        string cpf;
+        string username;
+        string senha;
+        int tipo; // 0 para Cliente, 1 para Admin
+        Repository* repo;
 
-public:
-    Pessoa(string nome, string cpf, string username, string senha, int tipo);
-    virtual ~Pessoa() {}
+    public:
+        Pessoa(string nome, string cpf, string username, string senha, int tipo); // construtor
+        virtual ~Pessoa() {}
 
-    virtual void menu() = 0; // Método virtual para o menu
+        virtual void menu() = 0; // Método virtual para o menu - pode ser sobrescrito nas classes derivadas (Admin e Cliente) 
 
-    string getNome();
-    string getCpf();
+        // funções para resgatar valor salvo nas variaveis
+        string getNome();
+        string getCpf();
 };
 
 #endif
