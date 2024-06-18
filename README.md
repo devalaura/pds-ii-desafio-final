@@ -1,3 +1,4 @@
+## Definições do projeto
 1. Requisitos Funcionais
     - CRUD de Livros:
         - Inserção de Livro:
@@ -36,3 +37,24 @@
     - Usabilidade:
         - A interface de console deve ser intuitiva e fácil de usar.
         - O sistema deve fornecer mensagens de erro e sucesso claras.
+
+## Instruções para compilação e execução
+
+1. Pre-requisitos:
+    - CMake -> [Tutorial de instalação no Windows](https://terminalroot.com.br/2023/03/como-instalar-o-cmake-no-windows.html)
+    - mongo-cxx-driver -> [Tutorial de instalação](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/)
+
+2. Compilação/build:
+    ```
+    // no diretório raiz do projeto
+
+    $ mkdir build
+
+    $ cd build
+
+    $ cmake ..
+
+    $ cmake --build .
+    ```
+
+3. O arquivo executável `main.exe` estará em `build > Debug`.
