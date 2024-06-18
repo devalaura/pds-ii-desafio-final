@@ -12,7 +12,7 @@ mongocxx::collection Connection::connect()
     mongocxx::uri uri("mongodb+srv://public:sitemate-2024@pds-ii-desafio-final.tupphsk.mongodb.net/?retryWrites=true&w=majority&appName=pds-ii-desafio-final");
 
     try {
-        mongocxx::client client(uri); // Conecta ao servidor MongoDB
+        mongocxx::client client(uri);
         std::cout << "Conexão bem-sucedida com o servidor MongoDB." << std::endl;
 
         mongocxx::database db = client["pds-ii"];
