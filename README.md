@@ -44,7 +44,13 @@
     - CMake -> [Tutorial de instalação no Windows](https://terminalroot.com.br/2023/03/como-instalar-o-cmake-no-windows.html)
     - mongo-cxx-driver -> [Tutorial de instalação](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/)
 
-2. Compilação/build:
+2. Configure corretamente as variáveis do arquivo `CMakeLists.txt`:
+    ```
+    set(CMAKE_TOOLCHAIN_FILE "C:/caminho/para/seu/vcpkg/scripts/buildsystems/vcpkg.cmake")
+    set(CMAKE_PREFIX_PATH "C:/caminho/para/seu/vcpkg/installed/x64-windows/share")
+    ```
+
+3. Compilação/build:
     ```
     // no diretório raiz do projeto
 
@@ -57,4 +63,4 @@
     $ cmake --build .
     ```
 
-3. O arquivo executável `main.exe` estará em `build > Debug`.
+4. O arquivo executável `main.exe` estará em `build > Debug`.
