@@ -4,8 +4,8 @@
 
 using namespace std;
 
-//construtor padrão -> inicializar os atributos 
-Livro::Livro(){
+// construtor padrão -> inicializar os atributos 
+Livro::Livro() {
     titulo = "";
     autor = "";
     ano_de_publicacao = 0;

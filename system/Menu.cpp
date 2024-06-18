@@ -1,6 +1,6 @@
 #include "Menu.hpp"
-#include "../GerenciamentoBiblioteca/Admin.hpp"
-#include "../GerenciamentoBiblioteca/Cliente.hpp"
+#include "../gerenciamento/Admin.hpp"
+#include "../gerenciamento/Cliente.hpp"
 #include "Login.hpp"
 #include <iostream>
 #include <limits>

@@ -1,14 +1,17 @@
 #include "Admin.hpp"
-#include "Livro.hpp"
+#include "./../model/Livro.hpp"
+#include "./../database/interfaces/Repository.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <limits>
 #include <vector>
+
 using namespace std;
 
 Admin::Admin(string nome, string cpf, string username, string senha)
-    : Pessoa(nome, cpf, username, senha, 1) {}
+    : Pessoa(nome, cpf, username, senha, 1) 
+{}
 
 void Admin::set_admin(string username) {
     fstream arquivo("usuarios.txt", ios::in | ios::out);
@@ -93,33 +96,11 @@ void Admin::remove_admin(string username) {
 void Admin::menu() {
     int opcao;
     string input;
-    Livro livro;
-    vector<Livro> livros;
-    string arquivo = "livros.txt";
 
-    // Carregar livros do arquivo
-      ifstream fileIn(arquivo);
-    if (fileIn.is_open()) {
-        string linha;
-        while (getline(fileIn, linha)) {
-            stringstream ss(linha);
-            string titulo, autor, ano, isbn;
-            getline(ss, titulo, ',');
-            getline(ss, autor, ',');
-            getline(ss, ano, ',');
-            getline(ss, isbn, ',');
-            
-            livro.setTitulo(titulo);
-            livro.setAutor(autor);
-            livro.setAnoDePublicacao(  stoi(ano));
-            livro.setIsbn(  stoi(isbn));
-            livros.push_back(livro);
-        }
-        fileIn.close();
-    }
+    Repository* repo = new Repository();
 
     while (true) {
-          cout << "1. Adicionar livro\n"
+          cout    << "1. Adicionar livro\n"
                   << "2. Deletar livro\n"
                   << "3. Listar livros\n"
                   << "4. Atualizar livro\n"
@@ -128,72 +109,61 @@ void Admin::menu() {
                   << "7. Deslogar\n"
                   << "Escolha: ";
         
-        while (true) {
-            getline(  cin, input);
-            try {
-                opcao =   stoi(input);
-                break;
-            } catch (const   invalid_argument& e) {
-                  cout << "Opcao invalida. Tente novamente.\n";
-            }
+        
+        getline(cin, input);
+        try {
+            opcao = stoi(input);
+        } catch (const   invalid_argument& e) {
+                cout << "Opcao invalida. Tente novamente.\n";
         }
+        
 
         switch (opcao) {
             case 1: {
+                Livro livro;
 
                 cout << "Insira as informacoes para adicionar um novo livro:\n";
                 cout << "Titulo: ";
-                getline(  cin, input);
+                getline(cin, input);
                 livro.setTitulo(input);
 
                 cout << "Autor: ";
-                getline(  cin, input);
+                getline(cin, input);
                 livro.setAutor(input);
 
                 cout << "Ano de publicacao: ";
-                getline(  cin, input);
-                livro.setAnoDePublicacao(  stoi(input));
+                getline(cin, input);
+                livro.setAnoDePublicacao(stoi(input));
 
                 cout << "ISBN: ";
-                getline(  cin, input);
-                livro.setIsbn(  stoi(input));
+                getline(cin, input);
+                livro.setIsbn(stoi(input));
 
-                livros.push_back(livro);
+                // Salvar livro no banco de dados
+                repo->insert_document(livro);
 
-                // Salvar livro no arquivo
-                ofstream fileOut(arquivo,   ios::app);
-                fileOut << livro.getTitulo() << "," << livro.getAutor() << "," << livro.getAnoDePublicacao() << "," << livro.getIsbn() << "\n";
-                fileOut.close();
-
-                  cout << "Livro criado com sucesso!\n";
+                cout << "Livro criado com sucesso!\n";
                 break;
             }
 
             case 2: {
                 cout << "Insira o ISBN do livro que deseja remover: ";
-                getline(  cin, input);
-                int isbn_pesquisa =   stoi(input);
+                getline(cin, input);
+                int isbn_pesquisa = stoi(input);
 
-                for (auto it = livros.begin(); it != livros.end(); ++it) {
-                    if (it->getIsbn() == isbn_pesquisa) {
-                        livros.erase(it);
-                        break;
-                    }
-                }
+                // Deleta livro do banco de dados
+                repo->delete_book_by_isbn(isbn_pesquisa);
 
-                // Salvar alterações no arquivo
-                ofstream fileOut(arquivo);
-                for (const auto& livro : livros) {
-                    fileOut << livro.getTitulo() << "," << livro.getAutor() << "," << livro.getAnoDePublicacao() << "," << livro.getIsbn() << "\n";
-                }
-                fileOut.close();
                 cout << "Livro removido com sucesso!\n";
                 break;
             }
 
             case 3: {
                 cout << "\nLivros disponiveis na biblioteca:\n";
-                for (const auto& livro : livros) {
+
+                // Busca todos os livros do banco de dados
+                vector<Livro> livros = repo->get_all_books();
+                for (Livro livro : livros) {
                     cout << "Titulo: " << livro.getTitulo() << "\n";
                     cout << "Autor: " << livro.getAutor() << "\n";
                     cout << "Ano de publicacao: " << livro.getAnoDePublicacao() << "\n";
@@ -205,38 +175,25 @@ void Admin::menu() {
             case 4: {
                 cout << "Atualizar livro\n";
                 cout << "Insira o ISBN do livro que deseja atualizar: ";
-                getline(  cin, input);
+                getline(cin, input);
                 int isbn_pesquisa =   stoi(input);
+                Livro livro = repo->get_book_by_isbn(isbn_pesquisa);
+                
+                cout << "Insira as novas informacoes do livro:\n";
+                cout << "Titulo: ";
+                getline(cin, input);
+                livro.setTitulo(input);
 
-                for (auto& livro : livros) {
-                    if (livro.getIsbn() == isbn_pesquisa) {
-                        cout << "Insira as novas informacoes do livro:\n";
-                        cout << "Titulo: ";
-                        getline(  cin, input);
-                        livro.setTitulo(input);
+                cout << "Autor: ";
+                getline(cin, input);
+                livro.setAutor(input);
 
-                        cout << "Autor: ";
-                        getline(  cin, input);
-                        livro.setAutor(input);
+                cout << "Ano de publicacao: ";
+                getline(cin, input);
+                livro.setAnoDePublicacao(stoi(input));
 
-                        cout << "Ano de publicacao: ";
-                        getline(  cin, input);
-                        livro.setAnoDePublicacao(  stoi(input));
+                repo->update_book_by_isbn(livro);
 
-                        cout << "ISBN: ";
-                        getline(  cin, input);
-                        livro.setIsbn(  stoi(input));
-
-                        break;
-                    }
-                }
-
-                // Salvar alterações no arquivo
-                ofstream fileOut(arquivo);
-                for (const auto& livro : livros) {
-                    fileOut << livro.getTitulo() << "," << livro.getAutor() << "," << livro.getAnoDePublicacao() << "," << livro.getIsbn() << "\n";
-                }
-                fileOut.close();
                 cout << "Livro alterado com sucesso!\n";
                 break;
             }

@@ -1,5 +1,6 @@
 #include "./interfaces/Repository.hpp"
 #include "./interfaces/Connection.hpp"
+#include "./../model/Livro.hpp"
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <iostream>
@@ -15,15 +16,14 @@ Repository::~Repository()
 	std::cout << "Repository\n";
 }
 
-void Repository::insert_document(Book* book)
+void Repository::insert_document(Livro livro)
 {
 	try {
 		bsoncxx::builder::stream::document document{};
-		document << "titulo" << book->titulo
-			<< "autor" << book->autor
-			<< "ano_publicacao" << book->ano_publicacao
-			<< "isbn" << book->isbn
-			<< bsoncxx::builder::stream::finalize;
+		document << "titulo" << livro.getTitulo()
+			<< "autor" << livro.getAutor()
+			<< "ano_publicacao" << livro.getAnoDePublicacao()
+			<< "isbn" << livro.getIsbn();
 
 		this->Collection.insert_one(document.view());
 	}
@@ -32,64 +32,71 @@ void Repository::insert_document(Book* book)
 	}
 }
 
-vector<Book*> Repository::get_all_books()
+vector<Livro> Repository::get_all_books()
 {
-	try {
-		vector<Book*> books;
+	vector<Livro> livros;
 
+	try {
 		auto cursor = this->Collection.find({});
 	
 		for (auto&& doc : cursor) {
-			Book* book = Book::from_bson(doc);
-			books.push_back(book);
+			Livro livro = Livro::from_bson(doc);
+			livros.push_back(livro);
 		}
 
-		return books;
+		return livros;
 	}
 	catch (const std::exception& e) {
 		std::cerr << "Erro ao buscar todos os títulos da base de dados: " << e.what() << std::endl;
+		return livros;
 	}
 }
 
-Book* Repository::get_book_by_isbn(std::string isbn)
+Livro Repository::get_book_by_isbn(int isbn)
 {
+	Livro livro;
+
 	try {
 		bsoncxx::stdx::optional<bsoncxx::document::value> cursor = this->Collection.find_one(bsoncxx::builder::stream::document{} << "isbn" << isbn << bsoncxx::builder::stream::finalize);
 
-		if (!cursor) return nullptr;
+		if (!cursor) return livro;
 
-		Book* book = Book::from_bson(*cursor);
+		livro = Livro::from_bson(*cursor);
 
-		return book;
+		return livro;
 	}
 	catch (const std::exception& e) {
 		std::cerr << "Erro ao buscar título ISBN = " << isbn << " na base de dados: " << e.what() << std::endl;
+		return livro;
 	}
 }
 
-Book* Repository::update_book_by_isbn(std::string isbn, Book* book)
+Livro Repository::update_book_by_isbn(Livro livro)
 {
+	Livro livroUpd;
+
 	try {
 		this->Collection.update_one(
-			bsoncxx::builder::stream::document{} << "isbn" << isbn << bsoncxx::builder::stream::finalize,
+			bsoncxx::builder::stream::document{} << "isbn" << livro.getIsbn() << bsoncxx::builder::stream::finalize,
 			bsoncxx::builder::stream::document{} << "$set"
 			<< bsoncxx::builder::stream::open_document
-			<< "titulo" << book->titulo
-			<< "autor" << book->autor
-			<< "ano_publicacao" << book->ano_publicacao
+			<< "titulo" << livro.getTitulo()
+			<< "autor" << livro.getAutor()
+			<< "ano_publicacao" << livro.getAnoDePublicacao()
 			<< bsoncxx::builder::stream::close_document
 			<< bsoncxx::builder::stream::finalize);
 
-		Book* book = this->get_book_by_isbn(isbn);
+		livroUpd = this->get_book_by_isbn(livro.getIsbn());
 		
-		return book;
+		return livroUpd;
 	}
 	catch (const std::exception& e) {
-		std::cerr << "Erro ao atualizar título ISBN = " << isbn << " na base de dados: " << e.what() << std::endl;
+		std::cerr << "Erro ao atualizar título ISBN = " << livro.getIsbn() << " na base de dados: " << e.what() << std::endl;
+		return livroUpd;
 	}
 }
 
-void Repository::delete_book_by_isbn(std::string isbn)
+void Repository::delete_book_by_isbn(int isbn)
 {
 	try {
 		this->Collection.delete_one(

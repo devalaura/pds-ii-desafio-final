@@ -15,6 +15,16 @@ set(CMAKE_PREFIX_PATH "C:/vcpkg/installed/x64-windows/share")
 find_package(mongocxx REQUIRED)
 find_package(bsoncxx REQUIRED)
 
-add_executable(main main.cpp "database/Connection.cpp" "model/Book.cpp" "database/Repository.cpp")
+add_executable(
+	main main.cpp 
+	"database/Connection.cpp"  
+	"database/Repository.cpp" 
+	"model/Livro.cpp"
+	"gerenciamento/Admin.cpp"
+	"gerenciamento/Cliente.cpp"
+	"gerenciamento/Pessoa.cpp"
+	"system/Login.cpp"
+	"system/Menu.cpp"
+)
 
 target_link_libraries(main PRIVATE mongo::bsoncxx_shared mongo::mongocxx_shared)

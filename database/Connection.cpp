@@ -5,17 +5,17 @@
 #include <mongocxx/uri.hpp>
 #include <iostream>
 #include "./interfaces/Connection.hpp"
+#include "./../model/Livro.hpp"
+
+Connection::Connection() 
+    : _client(std::make_unique<mongocxx::client>(mongocxx::uri("mongodb+srv://public:sitemate-2024@pds-ii-desafio-final.tupphsk.mongodb.net/?retryWrites=true&w=majority&appName=pds-ii-desafio-final"))) 
+{}
 
 mongocxx::collection Connection::connect()
 {
-    mongocxx::instance instance{};
-    mongocxx::uri uri("mongodb+srv://public:sitemate-2024@pds-ii-desafio-final.tupphsk.mongodb.net/?retryWrites=true&w=majority&appName=pds-ii-desafio-final");
 
     try {
-        mongocxx::client client(uri);
-        std::cout << "Conexão bem-sucedida com o servidor MongoDB." << std::endl;
-
-        mongocxx::database db = client["pds-ii"];
+        mongocxx::database db = (*_client)["pds-ii"];
         mongocxx::collection coll = db["desafio-final"];
 
         return coll;
